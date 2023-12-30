@@ -1,2 +1,3 @@
 # block_chain_study
-react golang  solidity
+Create your own branches, modules are divided into react, solidity, golang
+
