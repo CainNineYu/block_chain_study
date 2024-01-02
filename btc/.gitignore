@@ -1,0 +1,5 @@
+cmd/indexer.db
+cmd/indexer.wal
+indexer
+coverage.out
+.idea
