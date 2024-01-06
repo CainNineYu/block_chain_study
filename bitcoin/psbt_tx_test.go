@@ -91,16 +91,16 @@ func TestPsbt1(t *testing.T) {
 	network := &chaincfg.TestNet3Params
 	// seller
 	txInput := &TxInput{
-		TxId:       "f0033c75985c7c4e6b370973637fb0d8b3a9288bea9327cff32407edfb3c3cd5",
-		VOut:       uint32(1),
-		Amount:     int64(700),
+		TxId:       "89edfa497d206f73d3b1831947d867a3f9add127ad651b6668f63d80b60a567d",
+		VOut:       uint32(0),
+		Amount:     int64(500),
 		Address:    "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
 		PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
 	}
 
 	txOutput := &TxOutput{
-		Address: "2NF33rckfiQTiE5Guk5ufUdwms8PgmtnEdc",
-		Amount:  int64(700),
+		Address: "tb1p5gjmksejyp69ujdecuu8gsydkw4zzr2mu5s8wvrsc3tan4mdhdqqtm9430",
+		Amount:  int64(500),
 	}
 
 	sellerPsbt, err := GenerateSignedListingPSBTBase641(txInput, txOutput, network)
@@ -127,9 +127,9 @@ func TestPsbt1(t *testing.T) {
 	// seller input
 	inputs = append(inputs, txInput)
 	inputs = append(inputs, &TxInput{
-		TxId:       "03283bcd7ce88ca10db0a164f11c48163d4cbe494c3e6f4574eb3a6accd67546",
-		VOut:       uint32(0),
-		Amount:     int64(7500),
+		TxId:       "2ea097ca0f7b45f2a6c31f77c058d0e121638fa7ef01a2ee1f86101571ac2d59",
+		VOut:       uint32(2),
+		Amount:     int64(5130),
 		Address:    "tb1p5gjmksejyp69ujdecuu8gsydkw4zzr2mu5s8wvrsc3tan4mdhdqqtm9430",
 		PrivateKey: "cTBhYKv1HJQHAJ8yo5Rx4Dxw5o5PExqazrkZJZBy8iEvuJBFM8MQ",
 	})
@@ -161,7 +161,7 @@ func TestPsbt1(t *testing.T) {
 	outputs = append(outputs, txOutput)
 	outputs = append(outputs, &TxOutput{
 		Address: "tb1p5gjmksejyp69ujdecuu8gsydkw4zzr2mu5s8wvrsc3tan4mdhdqqtm9430",
-		Amount:  int64(6500),
+		Amount:  int64(4130),
 	})
 	//outputs = append(outputs, &TxOutput{
 	//	Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
