@@ -87,6 +87,97 @@ func TestPsbt(t *testing.T) {
 	t.Log(buyerTx)
 }
 
+func TestPsbt1(t *testing.T) {
+	network := &chaincfg.TestNet3Params
+	// seller
+	txInput := &TxInput{
+		TxId:       "9f8b71ad5c39995d24e1e3ad4037165dc4e7477a86e7a62626862b8deb17dd98",
+		VOut:       uint32(0),
+		Amount:     int64(3000),
+		Address:    "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
+		PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
+	}
+
+	txOutput := &TxOutput{
+		Address: "2NF33rckfiQTiE5Guk5ufUdwms8PgmtnEdc",
+		Amount:  int64(2000),
+	}
+
+	sellerPsbt, err := GenerateSignedListingPSBTBase641(txInput, txOutput, network)
+	require.Nil(t, err)
+	t.Log(sellerPsbt)
+
+	// buyer
+	var inputs []*TxInput
+	//inputs = append(inputs, &TxInput{
+	//	TxId:       "c341f86995ab30057eb24edd9f244f621c1cea18482a954b02fab77f1dabf4ed",
+	//	VOut:       uint32(0),
+	//	Amount:     int64(4000),
+	//	Address:    "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
+	//	PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
+	//})
+	//inputs = append(inputs, &TxInput{
+	//	TxId:           "7089429b963ff019389ad9c055b36a1b4b76cd973a270ca8340403b6c5012b2f",
+	//	VOut:           uint32(0),
+	//	Amount:         int64(680194),
+	//	Address:        "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
+	//	PrivateKey:     "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
+	//	NonWitnessUtxo: "02000000010a6b13715c8effde51dac60d572358005a589cd80413a88e0912e4c6d275abbe010000006a473044022019e34aa16cf55eb9c7a8627f61bcd671525a3818a23ab8a78af13c35121ea3c8022055a5bfb3e8486f6e83707660f1fca3da06f140f449902a63900625f43fadf10501210357bbb2d4a9cb8a2357633f201b9c518c2795ded682b7913c6beef3fe23bd6d2fffffffff019c9e0700000000001976a9145c005c5532ce810ddf20f9d1d939631b47089ecd88ac00000000",
+	//})
+	// seller input
+	inputs = append(inputs, txInput)
+	inputs = append(inputs, &TxInput{
+		TxId:       "dd28b16c0ceddde1d6eb41cf06f3909bae8f0849ea65bb34466d4c1d43af36a6",
+		VOut:       uint32(0),
+		Amount:     int64(3500),
+		Address:    "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
+		PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
+	})
+	//inputs = append(inputs, &TxInput{
+	//	TxId:       "85810bfb0757d389022c78c35ad0dd3f2cc6495bbb9dbc199cf055e0b6cc4181",
+	//	VOut:       uint32(0),
+	//	Amount:     int64(600),
+	//	Address:    "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
+	//	PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
+	//})
+
+	var outputs []*TxOutput
+	//outputs = append(outputs, &TxOutput{
+	//	Address: "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
+	//	Amount:  int64(3500),
+	//})
+	//outputs = append(outputs, &TxOutput{
+	//	Address: "mouQtmBWDS7JnT65Grj2tPzdSmGKJgRMhE",
+	//	Amount:  int64(680000),
+	//})
+	// seller output
+	outputs = append(outputs, txOutput)
+	outputs = append(outputs, &TxOutput{
+		Address: "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
+		Amount:  int64(3500),
+	})
+	//outputs = append(outputs, &TxOutput{
+	//	Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
+	//	Amount:  int64(4000),
+	//})
+	//outputs = append(outputs, &TxOutput{
+	//	Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
+	//	Amount:  int64(5000),
+	//})
+	//outputs = append(outputs, &TxOutput{
+	//	Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
+	//	Amount:  int64(500),
+	//})
+
+	fee, err := CalcFee(inputs, outputs, sellerPsbt, 2, network)
+	require.Nil(t, err)
+	t.Log(fee)
+
+	buyerTx, err := GenerateSignedBuyingTx1(inputs, outputs, sellerPsbt, network)
+	require.Nil(t, err)
+	t.Log(buyerTx)
+}
+
 func TestGenerateUnsignedPSBTHex(t *testing.T) {
 	network := &chaincfg.TestNet3Params
 	var inputs []*TxInput

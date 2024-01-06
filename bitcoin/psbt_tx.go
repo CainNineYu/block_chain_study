@@ -35,7 +35,7 @@ type TxOutput struct {
 	PublicKey         string
 }
 
-const SellerSignatureIndex = 2
+const SellerSignatureIndex = 0
 
 func GenerateSignedListingPSBTBase64(in *TxInput, out *TxOutput, network *chaincfg.Params) (string, error) {
 	txHash, err := chainhash.NewHashFromStr(in.TxId)
@@ -97,7 +97,156 @@ func GenerateSignedListingPSBTBase64(in *TxInput, out *TxOutput, network *chainc
 	return p.B64Encode()
 }
 
+func GenerateSignedListingPSBTBase641(in *TxInput, out *TxOutput, network *chaincfg.Params) (string, error) {
+	txHash, err := chainhash.NewHashFromStr(in.TxId)
+	if err != nil {
+		return "", err
+	}
+	prevOut := wire.NewOutPoint(txHash, in.VOut)
+	inputs := []*wire.OutPoint{prevOut}
+
+	pkScript, err := AddrToPkScript(out.Address, network)
+	if err != nil {
+		return "", err
+	}
+	//// placeholder
+	//dummyPkScript, err := AddrToPkScript("bc1pcyj5mt2q4t4py8jnur8vpxvxxchke4pzy7tdr9yvj3u3kdfgrj6sw3rzmr", network)
+	//if err != nil {
+	//	return "", err
+	//}
+	outputs := []*wire.TxOut{wire.NewTxOut(out.Amount, pkScript)}
+
+	nSequences := []uint32{wire.MaxTxInSequenceNum}
+	p, err := psbt.New(inputs, outputs, int32(2), uint32(0), nSequences)
+	if err != nil {
+		return "", err
+	}
+
+	updater, err := psbt.NewUpdater(p)
+	if err != nil {
+		return "", err
+	}
+
+	//dummyWitnessUtxo := wire.NewTxOut(0, dummyPkScript)
+	//err = updater.AddInWitnessUtxo(dummyWitnessUtxo, 0)
+	//if err != nil {
+	//	return "", err
+	//}
+	//err = updater.AddInWitnessUtxo(dummyWitnessUtxo, 1)
+	//if err != nil {
+	//	return "", err
+	//}
+
+	prevPkScript, err := AddrToPkScript(in.Address, network)
+	if err != nil {
+		return "", err
+	}
+	witnessUtxo := wire.NewTxOut(in.Amount, prevPkScript)
+	prevOuts := map[wire.OutPoint]*wire.TxOut{
+		*prevOut: witnessUtxo,
+	}
+	prevOutputFetcher := txscript.NewMultiPrevOutFetcher(prevOuts)
+
+	err = signInput(updater, SellerSignatureIndex, in, prevOutputFetcher, txscript.SigHashSingle|txscript.SigHashAnyOneCanPay, network)
+	if err != nil {
+		return "", err
+	}
+
+	return p.B64Encode()
+}
+
 func GenerateSignedBuyingTx(ins []*TxInput, outs []*TxOutput, sellerPsbt string, network *chaincfg.Params) (string, error) {
+	sp, err := psbt.NewFromRawBytes(bytes.NewReader([]byte(sellerPsbt)), true)
+	if err != nil {
+		return "", err
+	}
+
+	var inputs []*wire.OutPoint
+	var nSequences []uint32
+	prevOuts := make(map[wire.OutPoint]*wire.TxOut)
+	for i, in := range ins {
+		var prevOut *wire.OutPoint
+		if i == SellerSignatureIndex {
+			prevOut = &sp.UnsignedTx.TxIn[i].PreviousOutPoint
+		} else {
+			txHash, err := chainhash.NewHashFromStr(in.TxId)
+			if err != nil {
+				return "", err
+			}
+			prevOut = wire.NewOutPoint(txHash, in.VOut)
+		}
+		inputs = append(inputs, prevOut)
+
+		prevPkScript, err := AddrToPkScript(in.Address, network)
+		if err != nil {
+			return "", err
+		}
+		witnessUtxo := wire.NewTxOut(in.Amount, prevPkScript)
+		prevOuts[*prevOut] = witnessUtxo
+
+		nSequences = append(nSequences, wire.MaxTxInSequenceNum)
+	}
+
+	var outputs []*wire.TxOut
+	for i, out := range outs {
+		if i == SellerSignatureIndex {
+			outputs = append(outputs, sp.UnsignedTx.TxOut[i])
+		} else {
+			pkScript, err := AddrToPkScript(out.Address, network)
+			if err != nil {
+				return "", err
+			}
+			outputs = append(outputs, wire.NewTxOut(out.Amount, pkScript))
+		}
+	}
+
+	bp, err := psbt.New(inputs, outputs, int32(2), uint32(0), nSequences)
+	if err != nil {
+		return "", err
+	}
+
+	updater, err := psbt.NewUpdater(bp)
+	if err != nil {
+		return "", err
+	}
+
+	prevOutputFetcher := txscript.NewMultiPrevOutFetcher(prevOuts)
+
+	for i, in := range ins {
+		if i == SellerSignatureIndex {
+			continue
+		}
+
+		if err = signInput(updater, i, in, prevOutputFetcher, txscript.SigHashAll, network); err != nil {
+			return "", err
+		}
+
+		if err = psbt.Finalize(bp, i); err != nil {
+			return "", err
+		}
+	}
+
+	// bp.UnsignedTx.TxIn[SellerSignatureIndex] = sp.UnsignedTx.TxIn[SellerSignatureIndex]
+	bp.Inputs[SellerSignatureIndex] = sp.Inputs[SellerSignatureIndex]
+
+	if err = psbt.MaybeFinalizeAll(bp); err != nil {
+		return "", err
+	}
+
+	buyerSignedTx, err := psbt.Extract(bp)
+	if err != nil {
+		return "", err
+	}
+
+	var buf bytes.Buffer
+	if err := buyerSignedTx.Serialize(&buf); err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(buf.Bytes()), nil
+}
+
+func GenerateSignedBuyingTx1(ins []*TxInput, outs []*TxOutput, sellerPsbt string, network *chaincfg.Params) (string, error) {
 	sp, err := psbt.NewFromRawBytes(bytes.NewReader([]byte(sellerPsbt)), true)
 	if err != nil {
 		return "", err
