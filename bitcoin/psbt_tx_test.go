@@ -91,16 +91,16 @@ func TestPsbt1(t *testing.T) {
 	network := &chaincfg.TestNet3Params
 	// seller
 	txInput := &TxInput{
-		TxId:       "9f8b71ad5c39995d24e1e3ad4037165dc4e7477a86e7a62626862b8deb17dd98",
-		VOut:       uint32(0),
-		Amount:     int64(3000),
+		TxId:       "f0033c75985c7c4e6b370973637fb0d8b3a9288bea9327cff32407edfb3c3cd5",
+		VOut:       uint32(1),
+		Amount:     int64(700),
 		Address:    "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
 		PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
 	}
 
 	txOutput := &TxOutput{
 		Address: "2NF33rckfiQTiE5Guk5ufUdwms8PgmtnEdc",
-		Amount:  int64(2000),
+		Amount:  int64(700),
 	}
 
 	sellerPsbt, err := GenerateSignedListingPSBTBase641(txInput, txOutput, network)
@@ -127,12 +127,19 @@ func TestPsbt1(t *testing.T) {
 	// seller input
 	inputs = append(inputs, txInput)
 	inputs = append(inputs, &TxInput{
-		TxId:       "dd28b16c0ceddde1d6eb41cf06f3909bae8f0849ea65bb34466d4c1d43af36a6",
+		TxId:       "03283bcd7ce88ca10db0a164f11c48163d4cbe494c3e6f4574eb3a6accd67546",
 		VOut:       uint32(0),
-		Amount:     int64(3500),
-		Address:    "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
-		PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
+		Amount:     int64(7500),
+		Address:    "tb1p5gjmksejyp69ujdecuu8gsydkw4zzr2mu5s8wvrsc3tan4mdhdqqtm9430",
+		PrivateKey: "cTBhYKv1HJQHAJ8yo5Rx4Dxw5o5PExqazrkZJZBy8iEvuJBFM8MQ",
 	})
+	//inputs = append(inputs, &TxInput{
+	//	TxId:       "1413c03a4d179d4d78d4ffb9e79b954bdc31716b0ba98fdc9288a676636464a0",
+	//	VOut:       uint32(0),
+	//	Amount:     int64(1000),
+	//	Address:    "2NF33rckfiQTiE5Guk5ufUdwms8PgmtnEdc",
+	//	PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
+	//})
 	//inputs = append(inputs, &TxInput{
 	//	TxId:       "85810bfb0757d389022c78c35ad0dd3f2cc6495bbb9dbc199cf055e0b6cc4181",
 	//	VOut:       uint32(0),
@@ -153,8 +160,8 @@ func TestPsbt1(t *testing.T) {
 	// seller output
 	outputs = append(outputs, txOutput)
 	outputs = append(outputs, &TxOutput{
-		Address: "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
-		Amount:  int64(3500),
+		Address: "tb1p5gjmksejyp69ujdecuu8gsydkw4zzr2mu5s8wvrsc3tan4mdhdqqtm9430",
+		Amount:  int64(6500),
 	})
 	//outputs = append(outputs, &TxOutput{
 	//	Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
