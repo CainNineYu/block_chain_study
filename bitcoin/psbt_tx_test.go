@@ -11,9 +11,9 @@ func TestPsbt(t *testing.T) {
 	network := &chaincfg.TestNet3Params
 	// seller
 	txInput := &TxInput{
-		TxId:       "5dcfa8b74c1750bbee04f523d0b77585119b4bfe282f96cb7335e54d227f0eb3",
-		VOut:       uint32(1),
-		Amount:     int64(600),
+		TxId:       "85810bfb0757d389022c78c35ad0dd3f2cc6495bbb9dbc199cf055e0b6cc4181",
+		VOut:       uint32(4),
+		Amount:     int64(5000),
 		Address:    "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
 		PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
 	}
@@ -30,16 +30,16 @@ func TestPsbt(t *testing.T) {
 	// buyer
 	var inputs []*TxInput
 	inputs = append(inputs, &TxInput{
-		TxId:       "6763efe9efb5512191f3412fc5e2eab7928f877ab52876e438edddc076a6e760",
-		VOut:       uint32(0),
-		Amount:     int64(546),
+		TxId:       "bac8174f64b2c2f09a372cca4adc085c4aeba654896535d9eeed4c5b1f87104c",
+		VOut:       uint32(1),
+		Amount:     int64(580),
 		Address:    "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
 		PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
 	})
 	inputs = append(inputs, &TxInput{
-		TxId:           "a27362faa918fab35e1d319fe682a7fe7911552b9a94039449e5993b3bcab226",
+		TxId:           "632007f95f9ec8f62c9ea9975e17beb50615ae71265f1f6689065299a42b4713",
 		VOut:           uint32(0),
-		Amount:         int64(7282),
+		Amount:         int64(546),
 		Address:        "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
 		PrivateKey:     "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
 		NonWitnessUtxo: "02000000010a6b13715c8effde51dac60d572358005a589cd80413a88e0912e4c6d275abbe010000006a473044022019e34aa16cf55eb9c7a8627f61bcd671525a3818a23ab8a78af13c35121ea3c8022055a5bfb3e8486f6e83707660f1fca3da06f140f449902a63900625f43fadf10501210357bbb2d4a9cb8a2357633f201b9c518c2795ded682b7913c6beef3fe23bd6d2fffffffff019c9e0700000000001976a9145c005c5532ce810ddf20f9d1d939631b47089ecd88ac00000000",
@@ -47,9 +47,9 @@ func TestPsbt(t *testing.T) {
 	// seller input
 	inputs = append(inputs, txInput)
 	inputs = append(inputs, &TxInput{
-		TxId:       "30daf1acf31e7c317c7bdc72ced0f8c4f74c082ba18c7ff13213cd6d9e20c87b",
+		TxId:       "85810bfb0757d389022c78c35ad0dd3f2cc6495bbb9dbc199cf055e0b6cc4181",
 		VOut:       uint32(0),
-		Amount:     int64(10000),
+		Amount:     int64(600),
 		Address:    "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
 		PrivateKey: "cPnvkvUYyHcSSS26iD1dkrJdV7k1RoUqJLhn3CYxpo398PdLVE22",
 	})
@@ -57,26 +57,26 @@ func TestPsbt(t *testing.T) {
 	var outputs []*TxOutput
 	outputs = append(outputs, &TxOutput{
 		Address: "tb1qtsq9c4fje6qsmheql8gajwtrrdrs38kdzeersc",
-		Amount:  int64(600),
-	})
-	outputs = append(outputs, &TxOutput{
-		Address: "mouQtmBWDS7JnT65Grj2tPzdSmGKJgRMhE",
-		Amount:  int64(7282),
-	})
-	// seller output
-	outputs = append(outputs, txOutput)
-	outputs = append(outputs, &TxOutput{
-		Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
 		Amount:  int64(4000),
 	})
 	outputs = append(outputs, &TxOutput{
-		Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
-		Amount:  int64(5000),
+		Address: "mouQtmBWDS7JnT65Grj2tPzdSmGKJgRMhE",
+		Amount:  int64(546),
 	})
-	outputs = append(outputs, &TxOutput{
-		Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
-		Amount:  int64(500),
-	})
+	// seller output
+	outputs = append(outputs, txOutput)
+	//outputs = append(outputs, &TxOutput{
+	//	Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
+	//	Amount:  int64(4000),
+	//})
+	//outputs = append(outputs, &TxOutput{
+	//	Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
+	//	Amount:  int64(5000),
+	//})
+	//outputs = append(outputs, &TxOutput{
+	//	Address: "tb1pklh8lqax5l7m2ycypptv2emc4gata2dy28svnwcp9u32wlkenvsspcvhsr",
+	//	Amount:  int64(500),
+	//})
 
 	fee, err := CalcFee(inputs, outputs, sellerPsbt, 2, network)
 	require.Nil(t, err)
