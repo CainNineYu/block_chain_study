@@ -16,4 +16,10 @@ Step：
 12.Sign the commit_tx with your wallet and send the commit_tx and reveal_tx to the Bitcoin network.
 
 ## Ref.
-https://medium.com/@quentangle/%E6%BA%90%E7%A0%81%E8%AE%B2%E8%A7%A3-ordinals-inscription%E9%93%B8%E9%80%A0%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90-2bc37bb7f67b
+1.https://medium.com/@quentangle/%E6%BA%90%E7%A0%81%E8%AE%B2%E8%A7%A3-ordinals-inscription%E9%93%B8%E9%80%A0%E8%BF%87%E7%A8%8B%E8%A7%A3%E6%9E%90-2bc37bb7f67b
+
+2.https://github.com/okx/BRC20-goSDK
+
+3.https://github.com/okx/go-wallet-sdk/
+
+

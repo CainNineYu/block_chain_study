@@ -8,6 +8,12 @@ import axios from "axios";
 import { UtxoInfo } from "@/plugins/transaction";
 initEccLib(ecc);
 
+
+
+
+
+
+
 export default function Home() {
     const unisat = UnisatInstance();
     const { accounts } = useGetAccounts();
@@ -46,9 +52,11 @@ export default function Home() {
             address: changeAddress,
             value: utxos[1].value - amountToSend - fee,
         });
-        const sign = await unisat?.signPsbt(psbt.toHex(), {
-            autoFinalized: false,
-        });
+        // const sign = await unisat?.signPsbt(psbt.toHex(), {
+        //     autoFinalized: false,
+        // });
+        const sign = await unisat?.signPsbt(psbt.toHex());
+
 
         if (sign) {
             psbt.finalizeAllInputs();
@@ -66,6 +74,44 @@ export default function Home() {
         const res = await fetch("https://mempool.space/api/v1/fees/recommended");
         console.log("getRate: ",await res.json());
     };
+
+    const createTapRoot = async () => {
+        const publicKey = await unisat?.getPublicKey();
+        const psbt = new Psbt({ network: networks.testnet });
+        const utxos = await axios(
+          `https://mempool.space/testnet/api/address/${accounts[0]}/utxo`,
+        ).then((res) => res.data);
+        const scriptPk = address
+          .toOutputScript(accounts[0], networks.testnet)
+          .toString("hex");
+        psbt.addInput({
+          hash: utxos[0].txid,
+          index: utxos[0].vout,
+          witnessUtxo: {
+            value: utxos[0].value,
+            script: Buffer.from(scriptPk, "hex"),
+          },
+        });
+        psbt.addOutput({
+          address: "tb1p735a86jnkfkqktj6kw0pzqnrs6cltekgsaj3fxaxxhg9krma2y6s85j3th",
+          value: 9500,
+        });
+    
+        const toSignInputs = psbt.txInputs.map((v, index) => ({
+          index,
+          publicKey: publicKey,
+        }));
+        // const sign = await unisat?.signPsbt(psbt.toHex(), {
+        //   autoFinalized: true,
+        //   toSignInputs,
+        // });
+        const sign = await unisat?.signPsbt(psbt.toHex());
+        console.log(sign, "sign");
+        if (sign) {
+          await unisat?.pushPsbt(sign);
+        }
+      };
+    
 
   return(
       <div className="connect-wallet gap-3 flex flex-col">

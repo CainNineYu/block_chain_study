@@ -11,7 +11,21 @@
   "dependencies": {
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.0.4"
+    "next": "14.0.4",
+    "axios": "^1.6.2",
+    "bitcoinjs-lib": "^6.1.5",
+    "@bitcoinerlab/secp256k1": "^1.0.5",
+    "@cmdcode/tapscript": "^1.4.4",
+    "ecpair": "^2.1.0",
+    "@cmdcode/crypto-utils": "^2.4.6",
+    "@tanstack/react-query": "^5.14.2",
+    "bb26": "^4.0.0",
+    "bignumber.js": "^9.1.2",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-import-resolver-custom-alias": "^1.3.2",
+    "minimalistic-assert": "^1.0.1",
+    "use-immer": "^0.9.0",
+    "varint": "^6.0.0"
   },
   "devDependencies": {
     "typescript": "^5",
